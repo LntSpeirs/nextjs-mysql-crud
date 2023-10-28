@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 const ProductForm = () => {
   const [producto, setProducto] = useState({
@@ -12,6 +12,7 @@ const ProductForm = () => {
 
   const form = useRef(null);
   const router = useRouter();
+  const params = useParams();
 
   const handleChange = (e) => {
     /*  console.log(e.target.name);
@@ -22,12 +23,35 @@ const ProductForm = () => {
     });
   };
 
+  useEffect(() => {
+    if (params.id) {
+      axios.get(`/api/products/${params.id}`).then((res) => {
+        //console.log(res);
+        setProducto({
+          name: res.data.name,
+          price: res.data.price,
+          description: res.data.description,
+        });
+      });
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const respuesta = await axios.post("/api/products", producto);
-    console.log(respuesta);
+
+    if (!params.id) {
+      //Creando producto
+      const respuesta = await axios.post("/api/products", producto);
+      console.log(respuesta);
+    } else {
+      //Editando producto
+      const respuesta = await axios.put(`/api/products/${params.id}`, producto);
+      //console.log(respuesta);
+    }
+
     form.current.reset();
     router.push("/products");
+    router.refresh();
   };
 
   return (
@@ -46,6 +70,7 @@ const ProductForm = () => {
         type="text"
         name="name"
         placeholder="Nombre"
+        value={producto.name}
         autoFocus
         onChange={handleChange}
         className="shadow appearance-none border rounded w-full py-2 px-3 text-black"
@@ -61,6 +86,7 @@ const ProductForm = () => {
         type="text"
         name="price"
         placeholder="00.00"
+        value={producto.price}
         onChange={handleChange}
         className="shadow appearance-none border rounded w-full py-2 px-3 text-black"
       />
@@ -74,13 +100,14 @@ const ProductForm = () => {
       <textarea
         name="description"
         placeholder="Descripción"
+        value={producto.description}
         rows={3}
         onChange={handleChange}
         className="shadow appearance-none border rounded w-full py-2 px-3 text-black"
       />
 
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Guardar producto
+        {params.id ? "Editar producto" : "Guardar producto"}
       </button>
     </form>
   );

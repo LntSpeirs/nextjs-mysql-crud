@@ -1,4 +1,5 @@
 import axios from "axios";
+import Buttons from "./Buttons";
 
 async function cargarProducto(idProducto) {
   const { data } = await axios.get(
@@ -16,15 +17,7 @@ const ProductPage = async ({ params }) => {
         <p>Nombre: {producto.name}</p>
         <p>Precio: {producto.price}</p>
         <p>Descripción: {producto.description}</p>
-        <div className="flex gap-x-2 justify-center mt-2">
-          {" "}
-          <button className="text-white bg-gray-500 hover-gray-red-700 py-2 px-3 rounded">
-            Editar
-          </button>
-          <button className="text-white bg-red-500 hover:bg-red-700 py-2 px-3 rounded">
-            Eliminar
-          </button>
-        </div>
+        <Buttons productId={producto.id} />
       </div>
     </section>
   );
