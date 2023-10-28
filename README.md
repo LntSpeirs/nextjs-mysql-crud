@@ -6,6 +6,7 @@ Configuracion con ESLint, Tailwind, directorio src/ y App Router.
 
 - Conexiones a BD MySQL con el modulo [serverless-mysql](https://www.npmjs.com/package/serverless-mysql):
 - Consultas a la api con axios
+- Guardado de imagenes en local y en la nube (cloudinary)[https://cloudinary.com/developers]
 
 ```bash
 npm i serverless-mysql
